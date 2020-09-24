@@ -1,7 +1,5 @@
 package dev.feiyang.paginglibrarytry;
 
-import android.app.Application;
-
 import androidx.annotation.NonNull;
 import androidx.paging.DataSource;
 

@@ -3,7 +3,6 @@ package dev.feiyang.paginglibrarytry;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.paging.PageKeyedDataSource;
 import androidx.paging.PositionalDataSource;
 
 import java.io.IOException;
@@ -11,9 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class GameDataSource extends PositionalDataSource<Game> {
 
@@ -28,8 +25,8 @@ public class GameDataSource extends PositionalDataSource<Game> {
                 games.add((Game) response.body());
                 if (finalI == params.requestedLoadSize - 1){
                     // TOTAL COUNT IS IMPORTANT! IT IS NOT THE TOTAL COUNT OF THE CURRENT FETCHED, BUT THE TOTAL COUNT OF POTENTIALLY POSSIBLY FETCHED
-                    Log.d("Retrofit", "Added " + finalI + " records");
-                    callback.onResult(games, 0, 600);
+                    Log.d("Retrofit", "Added " + (finalI + 1) + " records");
+                    callback.onResult(games, 0, 8000);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -49,7 +46,7 @@ public class GameDataSource extends PositionalDataSource<Game> {
                 games.add((Game) response.body());
                 if (finalI == params.loadSize - 1){
                     // TOTAL COUNT IS IMPORTANT! IT IS NOT THE TOTAL COUNT OF THE CURRENT FETCHED, BUT THE TOTAL COUNT OF POTENTIALLY POSSIBLY FETCHED
-                    Log.d("Retrofit", "Added " + finalI + " records");
+                    Log.d("Retrofit", "Added " + (finalI + 1) + " records");
                     callback.onResult(games);
                 }
             } catch (IOException e) {

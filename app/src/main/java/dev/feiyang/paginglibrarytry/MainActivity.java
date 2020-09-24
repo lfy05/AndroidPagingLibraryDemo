@@ -3,6 +3,7 @@ package dev.feiyang.paginglibrarytry;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.PagedList;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
+    private MainActivityVM mMainActivityVM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +29,10 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
         GameDataRepository repository = new GameDataRepository();
-        repository.getLivePagedGameList().observe(this, new Observer<PagedList<Game>>() {
+        mMainActivityVM = new ViewModelProvider(this).get(MainActivityVM.class);
+        mMainActivityVM.getLivePagedList().observe(this, new Observer<PagedList<Game>>() {
             @Override
             public void onChanged(PagedList<Game> games) {
                 Log.d("Dataset", "Changed: size - " + games.size());
