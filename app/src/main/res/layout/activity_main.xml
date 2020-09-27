@@ -20,6 +20,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        android:focusable="auto"
+        android:focusableInTouchMode="true"
+        android:screenReaderFocusable="true"
         app:menu="@menu/nav_drawer_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

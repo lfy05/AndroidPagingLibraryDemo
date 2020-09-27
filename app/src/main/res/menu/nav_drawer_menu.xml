@@ -3,11 +3,15 @@
 
     <item
         android:id="@+id/fragmentOne"
+        android:checkable="false"
+        android:contentDescription="Navigate to Fragment One"
         android:title="Fragment One" />
     <item
         android:id="@+id/fragmentTwo"
+        android:contentDescription="Navigate to Fragment Two"
         android:title="Fragment Two" />
     <item
         android:id="@+id/fragmentThree"
+        android:contentDescription="Navigate to Fragment Three"
         android:title="Fragment Three" />
 </menu>

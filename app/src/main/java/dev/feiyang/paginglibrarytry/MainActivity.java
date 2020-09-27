@@ -91,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         // this hooks up the navigation
         NavigationUI.setupWithNavController(activityMainBinding.navView, navController);
+        // set the contentDescription of the 1st item on the menu used by the navView
+        activityMainBinding.navView.getMenu().getItem(0).setContentDescription("Navigate 1");
     }
 
     @Override
@@ -98,4 +100,6 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.navHost);
         return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
     }
+
+
 }
