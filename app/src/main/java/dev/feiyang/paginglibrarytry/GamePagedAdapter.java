@@ -15,24 +15,67 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 public class GamePagedAdapter extends PagedListAdapter<Game, GamePagedAdapter.GameViewHolder> {
-    public class GameViewHolder extends RecyclerView.ViewHolder{
+
+    public interface OnItemClickedListener{
+        public void onItemClicked(Game game);
+    }
+
+    public class GameViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        // The listener for when this ViewHolder View is clicked.
+        OnItemClickedListener onItemClickedListener;
+
+        Game game;
         ImageView gameImage;
         TextView gameTitle;
         TextView gameGenre;
         TextView gameRating;
         TextView gameRCount;
 
-        public GameViewHolder(@NonNull View itemView) {
+        public GameViewHolder(@NonNull View itemView, OnItemClickedListener onItemClickedListener) {
             super(itemView);
             this.gameImage = itemView.findViewById(R.id.game_image);
             this.gameTitle = itemView.findViewById(R.id.game_title);
             this.gameGenre = itemView.findViewById(R.id.game_genre);
             this.gameRating = itemView.findViewById(R.id.game_rating);
             this.gameRCount = itemView.findViewById(R.id.game_rcount);
+            // attach and setup callback
+            this.onItemClickedListener = onItemClickedListener;
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            // invoke callback
+            onItemClickedListener.onItemClicked(this.game);
+        }
+
+        public void setGame(Game game) {
+            this.game = game;
+            if (game == null){
+                this.gameGenre.setText("Loading....");
+                return;
+            }
+
+            this.gameTitle.setText(game.getTitle());
+            this.gameGenre.setText(game.getGenre() + ", " + game.getSubgenre());
+            this.gameRating.setText(Double.toString(game.getRating()));       // double --> string
+
+            int rCountK = (int) game.getrCount() / 1000;// get rCount in thousands
+
+            if (rCountK > 0){
+                this.gameRCount.setText(rCountK + "k ratings");
+            } else {
+                this.gameRCount.setText("<1k ratings");
+            }
+
+            // load game icon into the row's icon view.
+            Picasso.get().load(game.getImgURL()).into(this.gameImage);
         }
     }
 
-    protected GamePagedAdapter() {
+    private OnItemClickedListener onItemClickedListener;
+
+    protected GamePagedAdapter(OnItemClickedListener onItemClickedListener) {
         super(new DiffUtil.ItemCallback<Game>() {
             @Override
             public boolean areItemsTheSame(@NonNull Game oldItem, @NonNull Game newItem) {
@@ -44,6 +87,7 @@ public class GamePagedAdapter extends PagedListAdapter<Game, GamePagedAdapter.Ga
                 return false;
             }
         });
+        this.onItemClickedListener = onItemClickedListener;
     }
 
     @NonNull
@@ -51,31 +95,13 @@ public class GamePagedAdapter extends PagedListAdapter<Game, GamePagedAdapter.Ga
     public GameViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View emptyGameInfoView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.game_row_layout, parent, false);
-        return new GameViewHolder(emptyGameInfoView);
+        return new GameViewHolder(emptyGameInfoView, onItemClickedListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull GameViewHolder holder, int position) {
         Log.d("Adapter", "Combining position: " + position);
         Game nGame = getItem(position);
-        if (nGame == null){
-            holder.gameGenre.setText("Loading....");
-            return;
-        }
-
-        holder.gameTitle.setText(nGame.getTitle());
-        holder.gameGenre.setText(nGame.getGenre() + ", " + nGame.getSubgenre());
-        holder.gameRating.setText(Double.toString(nGame.getRating()));       // double --> string
-
-        int rCountK = (int) nGame.getrCount() / 1000;// get rCount in thousands
-
-        if (rCountK > 0){
-            holder.gameRCount.setText(rCountK + "k ratings");
-        } else {
-            holder.gameRCount.setText("<1k ratings");
-        }
-
-        // load game icon into the row's icon view.
-        Picasso.get().load(nGame.getImgURL()).into(holder.gameImage);
+        holder.setGame(nGame);
     }
 }
